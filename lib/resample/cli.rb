@@ -1,5 +1,6 @@
 require 'ostruct'
 require 'optparse'
+require 'fileutils'
 
 MSWIN = (RUBY_PLATFORM =~ /mswin32/) or false
 

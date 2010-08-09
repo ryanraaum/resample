@@ -23,7 +23,7 @@ class GMSample
         first_point = true
         o.points.each do |p|
           if p.missing_data?
-            res = ((0...DIMENSIONS).collect { Resample.missing.ljust(15) }).join(" ")
+            res = ((0...Resample.dimensions).collect { Resample.missing.ljust(15) }).join(" ")
           else
             res = (p.values.collect { |v| (format "%.4f", v).ljust(15) }).join(" ")
           end
@@ -39,7 +39,7 @@ class GMSample
           first_point = true
           l.points.each do |p|
             if l.missing_data?
-              res = ((0...DIMENSIONS).collect { Resample.missing.ljust(15) }).join(" ")
+              res = ((0...Resample.dimensions).collect { Resample.missing.ljust(15) }).join(" ")
             else
               res = (p.values.collect { |v| (format "%.4f", v).ljust(15) }).join(" ")
             end
@@ -57,13 +57,13 @@ class GMSample
   
   def write_to_morph(directory)
     File.open(File.join(directory, label + '.prn'), 'w') do |file|
-      file.write "1 1L #{number_of_coordinates} 1 #{Resample.missing} DIM=#{DIMENSIONS}\n"
+      file.write "1 1L #{number_of_coordinates} 1 #{Resample.missing} DIM=#{Resample.dimensions}\n"
       file.write "#{label}\n\n"
       orientations.each do |o|
         first_point = true
         o.points.each do |p|
           if p.missing_data?
-            res = ((0...DIMENSIONS).collect { Resample.missing.ljust(15) }).join(" ")
+            res = ((0...Resample.dimensions).collect { Resample.missing.ljust(15) }).join(" ")
           else
             res = (p.values.collect { |v| (format "%.4f", v).ljust(15) }).join(" ")
           end
@@ -74,7 +74,7 @@ class GMSample
           first_point = true
           l.points.each do |p|
             if l.missing_data?
-              res = ((0...DIMENSIONS).collect { Resample.missing.ljust(15) }).join(" ")
+              res = ((0...Resample.dimensions).collect { Resample.missing.ljust(15) }).join(" ")
             else
               res = (p.values.collect { |v| (format "%.4f", v).ljust(15) }).join(" ")
             end
@@ -110,7 +110,7 @@ class GMSample
         # skip empty lines
         next if entries.length == 0
         # 3,4,5 are the only valid lengths in a 3D file
-        if entries.length < (DIMENSIONS) or entries.length > (DIMENSIONS + 2)
+        if entries.length < (Resample.dimensions) or entries.length > (Resample.dimensions + 2)
           GMErrorHandler.notice 3, "Skipping file #{filename}, line #{line_number} is not correctly formatted."
           raise GMFileFormatError
         end # error check
@@ -125,19 +125,19 @@ class GMSample
   def process_entries(entries)
     curr_orientation = nil
     entries_sizes = entries.collect { |e| e.length }
-    # if no line has DIMENSIONS+2 entries, there is only one orientation in the file
-    if !(entries_sizes.include?(DIMENSIONS+2))
+    # if no line has Resample.dimensions+2 entries, there is only one orientation in the file
+    if !(entries_sizes.include?(Resample.dimensions+2))
       curr_orientation = GMOrientation.new
       curr_orientation.label = nil
     # if there are multiple orientations, the first orientation must start on the first data line
-    elsif entries_sizes[0] != (DIMENSIONS+2)
+    elsif entries_sizes[0] != (Resample.dimensions+2)
       GMErrorHandler.notice 3, "Skipping file #{filename}, the first orientation does not start on the first data line."
       raise GMFileFormatError
     end
     curr_line = nil
     (0..entries.length).to_a.each do |i|
       # FIRST, special case of starting a new orientation
-      if entries_sizes[i] == (DIMENSIONS+2)
+      if entries_sizes[i] == (Resample.dimensions+2)
         # if there is an open line, add it to curr_orientation
         if curr_line and curr_orientation
           curr_orientation.add_line curr_line 
@@ -146,35 +146,35 @@ class GMSample
         if !curr_orientation.nil? then add_orientation curr_orientation end
         curr_orientation = GMOrientation.new
         curr_orientation.label = entries[i][-1]
-        # if the next entry size is DIMENSIONS,
+        # if the next entry size is Resample.dimensions,
         #   we're starting a line
-        if (entries_sizes[i+1] == DIMENSIONS)
+        if (entries_sizes[i+1] == Resample.dimensions)
           curr_line = GMLine.new
           curr_line.label = entries[i][-2]
-          curr_line.add_point GMPoint.new.init(entries[i][0...DIMENSIONS])
+          curr_line.add_point GMPoint.new.init(entries[i][0...Resample.dimensions])
         # otherwise we're just adding a point
         else 
-          curr_orientation.add_point GMPoint.new.init(entries[i][0...DIMENSIONS], entries[i][-2])
+          curr_orientation.add_point GMPoint.new.init(entries[i][0...Resample.dimensions], entries[i][-2])
         end
       # SECOND, inside an orientation 
-      # if the current entry is size DIMENSIONS+1, we're adding either a new point or line
-      elsif (entries_sizes[i] == (DIMENSIONS+1))
+      # if the current entry is size Resample.dimensions+1, we're adding either a new point or line
+      elsif (entries_sizes[i] == (Resample.dimensions+1))
         if curr_line
           curr_orientation.add_line curr_line
           curr_line = nil
         end
-        # if the next entry size is DIMENSIONS,
+        # if the next entry size is Resample.dimensions,
         #   we're starting a line
-        if (entries_sizes[i+1] == DIMENSIONS)
+        if (entries_sizes[i+1] == Resample.dimensions)
           curr_line = GMLine.new
           curr_line.label = entries[i][-1]
-          curr_line.add_point GMPoint.new.init(entries[i][0...DIMENSIONS])
+          curr_line.add_point GMPoint.new.init(entries[i][0...Resample.dimensions])
         # otherwise we're just adding a point
         else 
-          curr_orientation.add_point GMPoint.new.init(entries[i][0...DIMENSIONS], entries[i][-1])
+          curr_orientation.add_point GMPoint.new.init(entries[i][0...Resample.dimensions], entries[i][-1])
         end
       # THIRD, adding a point to a line
-      elsif (entries_sizes[i] == DIMENSIONS) and curr_line
+      elsif (entries_sizes[i] == Resample.dimensions) and curr_line
         curr_line.add_point GMPoint.new.init(entries[i])
       end
     end
@@ -229,7 +229,15 @@ class GMOrientation
   end
   
   def resample!(name, num)
-    lines.each { |l| if l.label == name then l.resample!(num) end }
+    lines.each do |l| 
+      if l.label == name 
+        if num == 0
+          lines.delete l
+        else
+          l.resample!(num) 
+        end
+      end
+    end
   end
   
 end
@@ -311,7 +319,7 @@ class GMLine
   def resample!(num)
     resampled_points = []
     if missing_data?
-      values = (0...DIMENSIONS).collect { Resample.missing }
+      values = (0...Resample.dimensions).collect { Resample.missing }
       num.times { resampled_points.push GMPoint.new.init(values) }
     else
       resampled_points.push @points[0]
@@ -330,7 +338,7 @@ class GMLine
         dd = along - @points[after-1].curve_length
         di = dd / @points[after].delta_length
         
-        values = (0...DIMENSIONS).collect { |i| @points[after-1].values[i] + (di * (@points[after].values[i] - @points[after-1].values[i])) }
+        values = (0...Resample.dimensions).collect { |i| @points[after-1].values[i] + (di * (@points[after].values[i] - @points[after-1].values[i])) }
         resampled_points.push GMPoint.new.init(values)
         
         along += ratio
