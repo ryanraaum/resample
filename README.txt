@@ -1,0 +1,37 @@
+= resample
+
+* http://github.com/ryanraaum/resample
+
+== DESCRIPTION:
+
+Resample a curvilinear set of semi-landmarks into a user-prescribed set of evenly-spaced semi-landmarks, using weighted linear interpolation.
+
+== FEATURES:
+
+* Process one file at a time or many simultaneously.
+* Each file may contain one or more curves.
+
+== SYNOPSIS:
+
+    # process lines indicated in `ctl.txt` in all files 
+    # located in the current directory  
+    resample.exe -c ctl.txt
+
+== LICENSE:
+
+Copyright (C) 2004-2006 David Reddy, Johann Kim 
+Copyright (C) 2006-2010 Ryan Raaum
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+

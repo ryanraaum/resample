@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+if ENV['RESAMPLETEST']
+  $LOAD_PATH << File.expand_path( File.dirname(__FILE__) + '/../lib' )
+end
+    
+require 'resample'
+require 'resample/gmdata'
+require 'resample/errors'
+require 'resample/cli'
+
+GMResamplerProgramManager.new(ARGV).run

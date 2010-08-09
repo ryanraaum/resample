@@ -1,0 +1,15 @@
+=== 1.1.0 / 2010
+
+* Adding some data management capabilities
+
+=== 1.0.0 / 2006
+
+* Rewritten in Ruby
+
+    * Commandline script in Ruby
+    * Packaged for Windows as a standalone script using Rubyscript2exe
+
+=== 0.1.0 / 2004
+
+* First version in PERL by David Reddy and Johann Kim
+
