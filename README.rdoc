@@ -13,9 +13,18 @@ Resample a curvilinear set of semi-landmarks into a user-prescribed set of evenl
 
 == SYNOPSIS:
 
-    # process lines indicated in `ctl.txt` in all files 
-    # located in the current directory  
-    resample.exe -c ctl.txt
+  # process lines indicated in `ctl.txt` in all files 
+  #   located in the current directory 
+  resample -c ctl.txt
+ 
+  # process files matching *.prn in the current directory
+  resample -c ctl.txt -m *.prn
+    
+  # process all files in the given directory
+  resample -c ctl.txt -d /Users/ryan/Documents/Lines
+    
+  # process all files matching hsa*.prn in the given directory
+  resample -c ctl.txt -d /Users/ryan/Documents/Lines -m hsa*.prn
 
 == LICENSE:
 
