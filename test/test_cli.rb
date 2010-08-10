@@ -31,7 +31,7 @@ end
 class TestResampler < Test::Unit::TestCase
 
   def test_file_matching
-    test_file_dir = File.join(File.dirname(__FILE__), 'test_files')
+    test_file_dir = File.join(File.dirname(__FILE__), 'test_files', '6_files_and_ctl')
     options = OpenStruct.new
     options.directory = test_file_dir
     options.file_match = '*'
