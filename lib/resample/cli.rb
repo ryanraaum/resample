@@ -7,10 +7,10 @@ MSWIN = (RUBY_PLATFORM =~ /32/) or false
 class GMResamplerProgramManager
   def initialize(args)
     @options = OpenStruct.new
-    @options.directory = Dir.getwd
+    @options.directory = File.expand_path(Dir.getwd)
     @options.missing_data = '9999'
     @options.output_format = 'dvlr'
-    @options.output_dir = File.join(Dir.getwd,'resampled')
+    @options.output_dir = File.expand_path(File.join(Dir.getwd,'resampled'))
     if MSWIN
        @options.file_match = "*.*"
     else
@@ -34,13 +34,13 @@ class GMResamplerProgramManager
       opts.on("-c", "--control-file CONTROL_FILE",
               "Resample lines as specified",
               "  in the CONTROL_FILE") do |cf|
-        @options.control_file_name = cf
+        @options.control_file_name = File.expand_path(cf)
       end
       
       opts.on("-d", "--directory DIRECTORY",
               "Process files in DIRECTORY",
               "  (default: current directory)") do |d|
-        @options.directory = d
+        @options.directory = File.expand_path(d)
       end
       
       if MSWIN
@@ -60,7 +60,7 @@ class GMResamplerProgramManager
       opts.on("-o", "--output-directory DIRECTORY",
               "Write processed files to DIRECTORY",
               "  (default: current directory/resampled)") do |o|
-        @options.output_dir = o
+        @options.output_dir = File.expand_path(o)
       end
       
       opts.on("-f", "--output-format FORMAT",

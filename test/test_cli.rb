@@ -14,11 +14,11 @@ class TestOptions < Test::Unit::TestCase
     # first short option flag '-c'
     pm = GMResamplerProgramManager.new(["-c", ctl_file])
     options = pm.instance_variable_get :@options
-    assert_equal(ctl_file, options.control_file_name)
+    assert_equal(ctl_file, File.basename(options.control_file_name))
     # then long option flag '--control-file'
     pm = GMResamplerProgramManager.new(["--control-file", ctl_file])
     options = pm.instance_variable_get :@options
-    assert_equal(ctl_file, options.control_file_name)
+    assert_equal(ctl_file, File.basename(options.control_file_name))
 
     # should attempt to exit if no control file is given
     assert_raise SystemExit do
