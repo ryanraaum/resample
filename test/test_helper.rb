@@ -20,7 +20,7 @@ require 'tmpdir'
 def silence_stream(*streams) #:yeild:
   on_hold = streams.collect{ |stream| stream.dup }
   streams.each do |stream|
-    stream.reopen(RUBY_PLATFORM =~ /mswin/ ? 'NUL:' : '/dev/null')
+    stream.reopen(RUBY_PLATFORM =~ /32/ ? 'NUL:' : '/dev/null')
     stream.sync = true
   end
   yield
