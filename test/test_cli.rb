@@ -41,6 +41,7 @@ class TestResampler < Test::Unit::TestCase
     samples = rs.instance_variable_get :@samples
     # there should be 6 samples
     assert_equal(6, samples.length)
+    samples.each { |s| assert_instance_of( GMSample, s ) }
 
     # file-matching more complicated than '*' has failed in the past
     options.file_match = '*.prn'
@@ -48,6 +49,7 @@ class TestResampler < Test::Unit::TestCase
     samples = rs.instance_variable_get :@samples
     # there should be 6 samples
     assert_equal(6, samples.length)
+    samples.each { |s| assert_instance_of( GMSample, s ) }
 
     # make sure that something that shouldn't work, doesn't
     options.file_match = '*.txt'
