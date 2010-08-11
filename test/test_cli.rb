@@ -51,6 +51,17 @@ class TestResampler < Test::Unit::TestCase
     assert_equal(6, samples.length)
     samples.each { |s| assert_instance_of( GMSample, s ) }
 
+    Dir.chdir(File.join(File.dirname(__FILE__), 'test_files', '6_files_and_ctl')) do
+      options.directory = Dir.getwd
+      options.file_match = '*.prn'
+      options.control_file_name = File.join(options.directory, 'ctl.txt')
+      rs = silence_stream(STDOUT) { GMResampler.new(options) }
+      samples = rs.instance_variable_get :@samples
+      # there should be 6 samples
+      assert_equal(6, samples.length)
+      samples.each { |s| assert_instance_of( GMSample, s ) }
+    end
+
     # make sure that something that shouldn't work, doesn't
     options.file_match = '*.txt'
     rs = silence_stream(STDOUT) { GMResampler.new(options) }
