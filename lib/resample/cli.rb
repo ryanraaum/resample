@@ -11,7 +11,7 @@ class GMResamplerProgramManager
     @options.missing_data = '9999'
     @options.output_format = 'dvlr'
     @options.output_dir = File.join(Dir.getwd,'resampled')
-    if RUBY_PLATFORM =~ /mswin32/
+    if MSWIN
        @options.file_match = "*.*"
     else
        @options.file_match = "*"
@@ -44,16 +44,16 @@ class GMResamplerProgramManager
       end
       
       if MSWIN
-        opts.on("-m", "--match FILE_MATCH",
-                "Process files matching FILE_MATCH",
-                "  (default: *.*)") do |m|
-          @options.file_match = m
+        opts.on("-e", "--extension FILE_EXTENSION",
+                "Process files with FILE_EXTENSION",
+                "  (default: *.*)") do |e|
+          @options.file_match = "*.#{e}"
         end
       else
-        opts.on("-m", "--match FILE_MATCH",
-                "Process files matching FILE_MATCH",
-                "  (default: *)") do |m|
-          @options.file_match = m
+        opts.on("-e", "--extension FILE_EXTENSION",
+                "Process files with FILE_EXTENSION",
+                "  (default: *)") do |e|
+          @options.file_match = "*.#{e}"
         end
       end
       
@@ -103,14 +103,14 @@ class GMResamplerProgramManager
     # located in the current directory  
     resample.exe -c ctl.txt
     
-    # process files matching *.prn in the current directory
-    resample.exe -c ctl.txt -m *.prn
+    # process all files with .prn extension in the current directory
+    resample.exe -c ctl.txt -e prn
     
     # process all files in the given directory
     resample.exe -c ctl.txt -d "C:\\Lines"
     
-    # process all files matching hsa*.prn in the given directory
-    resample.exe -c ctl.txt -d "C:\\Lines" -m hsa*.prn
+    # process all files with .prn extension in the given directory
+    resample.exe -c ctl.txt -d "C:\\Lines" -e prn
     
     EOF
       else
@@ -120,14 +120,14 @@ class GMResamplerProgramManager
     #   located in the current directory 
     resample -c ctl.txt
  
-    # process files matching *.prn in the current directory
-    resample -c ctl.txt -m *.prn
+    # process all files with .prn extension in the current directory
+    resample -c ctl.txt -e prn
     
     # process all files in the given directory
     resample -c ctl.txt -d /Users/ryan/Documents/Lines
     
-    # process all files matching hsa*.prn in the given directory
-    resample -c ctl.txt -d /Users/ryan/Documents/Lines -m hsa*.prn
+    # process all files with .prn extension in the given directory
+    resample -c ctl.txt -d /Users/ryan/Documents/Lines -e prn
     
     EOF
       end
