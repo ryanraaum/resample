@@ -2,7 +2,7 @@ require 'ostruct'
 require 'optparse'
 require 'fileutils'
 
-MSWIN = (RUBY_PLATFORM =~ /mswin32/) or false
+MSWIN = (RUBY_PLATFORM =~ /32/) or false
 
 class GMResamplerProgramManager
   def initialize(args)
